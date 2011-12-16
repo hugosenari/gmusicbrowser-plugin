@@ -1,14 +1,11 @@
-
-
-use Data::Dumper;
 use Net::DBus;
 use Net::DBus ':typing';
 
 my $bus=Net::DBus->session;
 
-sub Log
-{	my $text=$_[0];
-	print "$text\n";
+sub Log{
+    my $info = shift;
+    print "$info\n";
 }
 
 sub Send
@@ -16,31 +13,41 @@ sub Send
         eval {
                 # Get a handle to the Zeitgeist service
                 my $zeitgeist = $bus->get_service("org.gnome.zeitgeist.Engine");
-        
+                
                 # Get the device manager
                 my $logger = $zeitgeist->get_object("/org/gnome/zeitgeist/log/activity",
-                                                    "org.gnome.zeitgeist.log");
+                                                    "org.gnome.zeitgeist.Log");
 
+                #$value = dbus_array([dbus_uint32(1)]); 
+                #my $eventss = $logger->GetEvents($value);
+                #print Dumper(
+                #            $eventss
+                #);
+                
                 #http://zeitgeist-project.com/docs/0.7.1/dbus_api.html
                 eval {
                         #METADATA
-                        my $time = time();
+                        my $timestamp = time();
                         my $interpretation = dbus_string('http://www.zeitgeist-project.com/ontologies/2010/01/27/zg#AccessEvent'); #ACCESS_EVENT
                         my $manifestation = dbus_string('http://www.zeitgeist-project.com/ontologies/2010/01/27/zg#ScheduledActivity'); #SCHEDULED_ACTIVITY
-                        my $actor = dbus_string('app://gmusicbrowser.desktop'); #GMUISIC_BROWSER
-                        my $metadata = dbus_array((
+                        my $actor = dbus_string('application://gmusicbrowser.desktop'); #GMUISIC_BROWSER
+                        my $metadata = dbus_array([
                                 dbus_string(''), #id undefined
-                                $time,
+                                $timestamp,
                                 $interpretation,
                                 
                                 $manifestation,
                                 $actor,
                                 dbus_string('')
-                        ));
+                        ]);
                 
                         #SUBJECT
                         my ($title,$album,$artist,$track,$uri)= (
-                            'titulo de teste', 'album teste', 'artista teste', 1, 'file://home/hugosenari/teste.mp3'
+                            'titulo de teste',
+                            'album teste',
+                            'artista teste',
+                            1, #track
+                            'file://home/hugosenari/01LowDownWhereTheSnakesCrawl.mp3'
                         );
                         my $dirPath = $uri;
                         $dirPath =~ s/\/[^\/]+$/\//g;
@@ -50,29 +57,31 @@ sub Send
                         my $subjectOrign = dbus_string($dirPath); #dir from
                         my $subjectMineType= dbus_string('audio/mpeg'); #minetype
                         my $subjectText = dbus_string("$title - $artist - $album - $track"); #display subject text
-                        my $subjectStorage = dbus_string('unknown'); #uuid from storage
-                        my $subject = dbus_array((
+                        my $subjectStorage = dbus_string('local'); #uuid from storage
+                        my $subject = dbus_array([
                                 $subjectUri,
                                 $subjectInterpretation,
                                 $subjectManifestation,
+                                
                                 $subjectOrign,
                                 $subjectMineType,
                                 $subjectText,
+                                
                                 $subjectStorage,
-                                $subjectUri,
-                        ));
+                                $subjectUri
+                        ]);
                         #subjects
-                        my $subjects =  dbus_array(($subject));
+                        my $subjects =  dbus_array([$subject]);
                         #bytes
-                        my $bytes = dbus_array(()); #array of bytes
+                        my $bytes = dbus_array([]); #array of bytes
                         #event
-                        my $event = dbus_struct(
+                        my $event = dbus_struct([
                                 $metadata,
                                 $subjects,
                                 $bytes
-                        );
+                        ]);
                         #events
-                        my $events = dbus_array(($event));
+                        my $events = dbus_array([$event]);
                         eval {
                                 #send to zeitgeist
                                 $logger->InsertEvents($events);
@@ -93,33 +102,3 @@ sub Send
         return 1;
 }
 Send();
-
-#[
-#    (
-#        [
-#            u'1',
-#            u'1315713565000',
-#            u'http://www.zeitgeist-project.com/ontologies/2010/01/27/zg#CreateEvent',
-
-#            u'http://www.zeitgeist-project.com/ontologies/2010/01/27/zg#UserActivity',
-#            u'application://file-roller.desktop',
-#            u''
-#        ],
-#        [
-#            [
-#                u'file:///home/hugosenari/Downloads/web.7z',
-#                u'http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#Archive',
-#                u'http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#FileDataObject',
-#                u'file:///home/hugosenari/Downloads',
-
-#                u'application/x-7z-compressed',
-#                u'web.7z',
-#                u'unknown',
-#                u'file:///home/hugosenari/Downloads/web.7z']
-#            ],
-#        [
-#        ]
-#    )
-#]
-#_parse_node->new->_parse_node...
-#new->_parse_node->_parse_interface->_parse_method->_parse_type

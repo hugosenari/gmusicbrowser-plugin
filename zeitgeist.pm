@@ -74,16 +74,18 @@ sub Changed
                 #http://zeitgeist-project.com/docs/0.7.1/dbus_api.html
                 eval {
                         #METADATA
-                        my $time = time();
+                        my $timestamp = time();
                         my $interpretation = dbus_string('http://www.zeitgeist-project.com/ontologies/2010/01/27/zg#AccessEvent'); #ACCESS_EVENT
                         my $manifestation = dbus_string('http://www.zeitgeist-project.com/ontologies/2010/01/27/zg#ScheduledActivity'); #SCHEDULED_ACTIVITY
-                        my $actor = dbus_string('app://gmusicbrowser.desktop'); #GMUISIC_BROWSER
+                        my $actor = dbus_string('application://gmusicbrowser.desktop'); #GMUISIC_BROWSER
                         my $metadata = dbus_array([
                                 '', #id undefined
-                                $time,
+                                $timestamp,
                                 $interpretation,
+				
                                 $manifestation,
-                                $actor
+                                $actor,
+                                dbus_string('')
                         ]);
                 
                         #SUBJECT
@@ -97,15 +99,18 @@ sub Changed
                         my $subjectOrign = dbus_string($dirPath); #dir from
                         my $subjectMineType= dbus_string('audio/mpeg'); #minetype
                         my $subjectText = dbus_string("$title - $artist - $album - $track"); #display subject text
-                        my $subjectStorage = dbus_string(''); #uuid from storage
+                        my $subjectStorage = dbus_string('local'); #uuid from storage
                         my $subject = dbus_array([
                                 $subjectUri,
                                 $subjectInterpretation,
                                 $subjectManifestation,
+				
                                 $subjectOrign,
                                 $subjectMineType,
                                 $subjectText,
-                                $subjectStorage
+				
+                                $subjectStorage,
+                                $subjectUri
                         ]);
                         #subjects
                         my $subjects =  dbus_array([$subject]);
