@@ -70,7 +70,7 @@ sub Changed
         
                 # Get the device manager
                 my $logger = $zeitgeist->get_object("/org/gnome/zeitgeist/log/activity",
-                                                    "org.gnome.zeitgeist.log");
+                                                    "org.gnome.zeitgeist.Log");
                 #http://zeitgeist-project.com/docs/0.7.1/dbus_api.html
                 eval {
                         #METADATA
@@ -128,14 +128,17 @@ sub Changed
                                 #send to zeitgeist
                                 $logger->InsertEvents($events);
                                 Log("Song logged: $title - $artist - $album - $track");
+				return 1;
                         } or do {
                                 Log("Cannot send metadata to zeitgeist, Error: $@");
                                 return 0;
                         };
+			return 1;
                 } or do {
                         Log("Cannot prepare metadata to send, Error: $@");
                         return 0;
                 };
+		return 1;
         } or do {
                 Log("Cannot connect to zeitgeist dbus object, Error: $@");
                 return 0;
