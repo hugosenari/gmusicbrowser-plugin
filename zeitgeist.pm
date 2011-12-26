@@ -37,6 +37,7 @@ my $bus=$GMB::DBus::bus;
 die "Requires DBus support to be active\n" unless $bus; #only requires this to use the hack in gmusicbrowser_dbus.pm so that Net::DBus::GLib is not required, else could do just : use Net::DBus::GLib; $bus=Net::DBus::GLib->session;
 
 my $handle;
+my $stoped = undef;
 
 sub Start
 {	$handle={};	#the handle to the Watch function must be a hash ref, if it is a Gtk2::Widget, UnWatch will be called when the widget is destroyed
@@ -123,7 +124,8 @@ sub Changed
                                 $bytes
                         ]);
                         #events
-                        my $events = dbus_array([$event]);
+			my $events = dbus_array([$event]);
+                        
                         eval {
                                 #send to zeitgeist
                                 $logger->InsertEvents($events);

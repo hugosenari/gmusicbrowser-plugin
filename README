@@ -1,1 +1,5 @@
 My gmusicbrowser plugins
+
+zeitgeist plugin:
+Isn't working because perl dbus lib (https://rt.cpan.org/Public/Bug/Display.html?id=73313)
+please look at https://github.com/hugosenari/zeitgeist-extensions
