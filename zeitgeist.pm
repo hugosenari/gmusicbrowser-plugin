@@ -80,10 +80,8 @@ sub Changed
                         my $manifestation = dbus_string('http://www.zeitgeist-project.com/ontologies/2010/01/27/zg#ScheduledActivity'); #SCHEDULED_ACTIVITY
                         my $actor = dbus_string('application://gmusicbrowser.desktop'); #GMUISIC_BROWSER
                         my $metadata = dbus_array([
-                                '', #id undefined
                                 $timestamp,
                                 $interpretation,
-				
                                 $manifestation,
                                 $actor,
                                 dbus_string('')

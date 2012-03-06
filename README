@@ -3,4 +3,7 @@ My gmusicbrowser plugins
 zeitgeist plugin:
 Isn't working because perl dbus lib (https://rt.cpan.org/Public/Bug/Display.html?id=73313)
 Solving this problem, this will work. For some reason Activity Journal doesn't show this logs, but Synapse shows.
-You can try this extension for zeitgeist that works too https://github.com/hugosenari/zeitgeist-extensions
+You can try this extension for zeitgeist that works too: https://github.com/hugosenari/zeitgeist-extensions
+
+Couchdb plugin:
+sync your configs with couchdb or desktopcouch
