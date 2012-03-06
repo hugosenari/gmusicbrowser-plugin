@@ -6,4 +6,7 @@ Solving this problem, this will work. For some reason Activity Journal doesn't s
 You can try this extension for zeitgeist that works too: https://github.com/hugosenari/zeitgeist-extensions
 
 Couchdb plugin:
-sync your configs with couchdb or desktopcouch
+Sync your configs with couchdb or desktopcouch
+
+Desktopcouch plugin
+Same of above but get port number from desktopcouch dbus
